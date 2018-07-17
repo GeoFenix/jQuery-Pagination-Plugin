@@ -4,7 +4,7 @@ This is my second plugin made as jQuery course final project :mortar_board: - sl
 The Pagination Plugin is aimed to divide selected html elements into pages which number is specified by user in the option parameters.
 As an example of paginated elements are images with my poems.  
 
-![alt tag](images/Pagination_example) 
+![alt tag](images/Pagination_example.jpg) 
 
 ## Descritpion and application 
 
