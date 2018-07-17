@@ -1,128 +1,77 @@
-# Smart-table 
+# jQuery Pagination Plugin 
 
-This is my first plugin made as JS course final project :mortar_board: - with a lot of tears and sweat but also with a lot more satisfaction. 
-The Smart Table is aimed to store the user's data :computer: and enables him to operate on it by inserting, editing, removing, filtering ect. 
-![alt tag](src/table_demo.png) 
+This is my second plugin made as jQuery course final project :mortar_board: - slightly adopted from my Smart Table project. 
+The Pagination Plugin is aimed to divide selected html elements into pages which number is specified by user in the option parameters.
+As an example of paginated elements are images with my poems.  
+
+![alt tag](images/Pagination_example) 
 
 ## Descritpion and application 
 
-The smart table plugin is available in :open_file_folder: js/plugin_smart_table.js and can be viewed in browser by index.html. 
-There are 6 exemplary table instances with different features enabled, executed from a file :open_file_folder: js/smart_table_instances.js. 
-Exemplary data for demonstration are delivered in data_for_smart_table.js 
+The pagination plugin is available in :open_file_folder: js/jquery_plugin_pagination.js and can be viewed in browser by index_jquery.html.
+Plugin structure follows jQuery Lightweight pattern. 
 
 ## Example of usage and input options
 
-To bring a smart table to life (like in :open_file_folder: js/smart_table_instances.js) you need to: 
+To bring pagination to life you need to: 
 
-:pushpin: Choose and element from you HTML code that will contain a smart table instance: 
-
-``` 
-var elForTable1 = document.querySelector('#smart-table'); 
-``` 
-
-:pushpin: Specify a columns name, configuration and input data type: 
+:pushpin: Choose and element from your HTML code that will contain elements for pagination: 
 
 ``` 
-var columns_2 = [{
-    columnName: 'ID',
-    dataType: 'number',
-}, {
-    columnName: 'First Name',
-    dataType: 'string',
-}, {
-    columnName: 'Last Name',
-    dataType: 'string',
-}, {
-    columnName: 'Username',
-    dataType: 'string',
-}, {
-    columnName: 'E-mail',
-    dataType: 'email',
-}, {
-    columnName: 'Age',
-    dataType: 'string',
-}];
+var $element = $('table');
 ``` 
 
-:pushpin: Prepare the input data in a right table format: 
+:pushpin: Define options with number of elements per page and the element type to be selected to the list: 
 
 ``` 
-var data = [{
-        "id": 1,
-        "firstName": "Mark",
-        "lastName": "Otto",
-        "username": "@mdo",
-        "email": "mdo@gmail.com",
-        "age": "28",
-    }, {
-        "id": 2,
-        "firstName": "Jacob",
-        "lastName": "Thornton",
-        "username": "@fat",
-        "email": "fat@yandex.ru",
-        "age": "45",
-    },
-
-// ... list of items 
-
-   {
-        "id": 60,
-        "firstName": "Lou",
-        "lastName": "Conner",
-        "username": "@Sanchez",
-        "email": "lousanchez@comtours.com",
-        "age": 16,
-    }
-];
+ var options1 = {
+    rowsPerPage: 2,
+    elementToSelect: 'tr'
+ };
 ``` 
 
-:pushpin: Define an option model - it's up to you which feature you choose 
+:pushpin: As a last step make your dream come true and evoke pagination of the chosen elements:
 
 ``` 
-var parameters2 = { 
-    nextPreviousButtons: true,
-    rowsPerPage: 10,
-    rowsColoring: true,
-    toolTips: true,
-};
-``` 
+$element.pagination($element, options1);
 
-:pushpin: As a last step you have to write your miraculous code to evoke your smart table instance (good job, dr. Frankeinstein :wink: ). A pagination plugin you run externally. 
-
-``` 
-var table1 = new SmartTable(elForTable1, columns_2, data_2, parameters2); 
-table1.pagination(); 
 ``` 
 
 ## Plugin methods example 
 
-And here is a piece of my code style with comments (rowColoring @public method):
+And here is a piece of my code style with comments (onClickShowNextPageHandler @private method):
 
 ``` 
- //Metoda 14. Kolorowanie co drugiego wiersza____________Metoda 14 ROWS COLORING____(this.allRows)
-    /**
-     * Colors every second row of the table, available in option parameters
-     * @public
-     */
-    SmartTable.prototype.rowsColoring = function () {
-        if (!!this.parameters.rowsColoring){
-            this.allRows = this.table.querySelectorAll('tr');
-            var rowsArray = [];
-            for (it = 2; it < this.allRows.length; it++) {
-                this.allRows[it].style.backgroundColor = '';
-                if (this.allRows[it].style.display === ''){
-                    rowsArray.push(this.allRows[it]);
-                }
+ /**
+ * Displays the next page rows in relation the currently chosen ones
+         * @param {object} event 
+         * @callback
+         * @private
+         */
+        Plugin.prototype.onClickShowNextPageHandler = function (event) {
+            /**
+             * Represents a button which coressponding rows are currently displayed
+             * It is selected thanks to the style attribute related to highliting 
+             * @type {nodeElement} */
+            var $currentPageButton = $(this.element).find('button[style]');
+            var $nextPageButton = $currentPageButton.next();
+            this.paginationInitialConditions(); 
+            var text = $currentPageButton.text();  
+            var pageNo = parseInt(text,10);
+            var currentPageNumber = pageNo +1;
+            // Pamietaj, pageNo ma nr wiekszy niz indeks w pagesArray!
+            if (pageNo === this.pagesArray.length) {
+                $(this.pagesArray[pageNo-1]).each(function (index, element) {
+                    $(element).css('display', '');
+                }); 
+                this.chosenButtonHighlight($currentPageButton);
+            } else {
+                $(this.pagesArray[pageNo]).each(function (index, element) {
+                    $(element).css('display', '');
+                });
+                this.chosenButtonHighlight($nextPageButton);
             };
-            for (var it = 0; it < rowsArray.length; it++) {
-                rowsArray[it].style.backgroundColor = '';
-                if (it % 2 === 0) {
-                    rowsArray[it].style.backgroundColor = '#fac000';
-                }
-            };
-        }
-    };
-    //Metoda 14
+        };
 ``` 
 
 ## Further Documentation 
@@ -134,12 +83,8 @@ And here is a piece of my code style with comments (rowColoring @public method):
 :+1: Support me with stars, good advice and keep your fingers crossed for my future in IT :smiley: 
 
 ## Features 
-
-* Filtering 
-* Tooltips 
-* Coloring 
+ 
 * Pagination (run externally) 
-* Add/Edit/Delete Data 
 
 ## License 
 
